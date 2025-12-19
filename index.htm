@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>4 желі</title>
+  <style>
+    body {
+      margin: 0; font-family: sans-serif;
+      background: #f9fafb; color: #111;
+    }
+    header {
+      background: #2563eb; color: white;
+      padding: 12px; text-align: center;
+    }
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; justify-content: space-around;
+      background: #1e293b; color: white;
+      padding: 10px 0;
+    }
+    nav button {
+      background: none; border: none; color: white;
+      font-size: 16px; cursor: pointer;
+    }
+    section { display: none; padding: 16px; }
+    section.active { display: block; }
+    .card {
+      background: white; border: 1px solid #ddd;
+      border-radius: 8px; padding: 12px; margin-bottom: 12px;
+    }
+    .author { font-weight: bold; }
+    .desc { color: #555; font-size: 14px; }
+    .comments { margin-top: 8px; border-top: 1px solid #eee; padding-top: 8px; }
+    .comment { font-size: 14px; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%; padding: 8px; margin-bottom: 10px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button.publish {
+      background: #2563eb; color: white; border: none;
+      padding: 10px 14px; border-radius: 6px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header><h1>4 желі</h1></header>
+
+  <!-- Үй -->
+  <section id="home" class="active">
+    <div class="card">
+      <div class="author">Айдар (@aidar)</div>
+      <div class="desc">Сипаттама: жеңіл UX, таза интерфейс</div>
+      <p>Бұл алғашқы пост. Жоба басталды!</p>
+      <div class="comments">
+        <div class="comment"><b>Бота:</b> Керемет!</div>
+        <div class="comment"><b>Ерлан:</b> Мобильде жақсы көрінеді.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Пост жариялау -->
+  <section id="create">
+    <h2>Пост қосу</h2>
+    <input type="text" id="author" placeholder="Автор аты">
+    <input type="text" id="title" placeholder="Тақырып">
+    <input type="text" id="desc" placeholder="Сипаттама">
+    <textarea id="body" placeholder="Пост мәтіні"></textarea>
+    <button class="publish" id="publishBtn">ОК — жариялау</button>
+  </section>
+
+  <!-- Аккаунт -->
+  <section id="account">
+    <h2>Аккаунт</h2>
+    <p>Желі автоматты түрде аккаунт жасайды. Жөндеу жоқ.</p>
+    <div class="card">
+      <div class="author">Мен (@user)</div>
+      <p>Құрылды: бүгін</p>
+      <p>Жарияланған посттар: <span id="postCount">1</span></p>
+    </div>
+  </section>
+
+  <!-- Навигация -->
+  <nav>
+    <button data-tab="home">Үй</button>
+    <button data-tab="create">Пост жариялау</button>
+    <button data-tab="account">Аккаунт</button>
+  </nav>
+
+  <script>
+    const tabs = document.querySelectorAll("nav button");
+    const sections = document.querySelectorAll("section");
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        sections.forEach(sec => sec.classList.remove("active"));
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    const publishBtn = document.getElementById("publishBtn");
+    const home = document.getElementById("home");
+    const postCount = document.getElementById("postCount");
+
+    publishBtn.addEventListener("click", () => {
+      const author = document.getElementById("author").value || "Белгісіз";
+      const title = document.getElementById("title").value || "Тақырыпсыз";
+      const desc = document.getElementById("desc").value || "";
+      const body = document.getElementById("body").value || "";
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="author">${author} (@${author.toLowerCase()})</div>
+        <div class="desc">Сипаттама: ${desc}</div>
+        <p><b>${title}</b><br>${body}</p>
+        <div class="comments">
+          <div class="comment"><b>Жүйе:</b> Пікір қалдырыңыз…</div>
+        </div>
+      `;
+      home.prepend(card);
+
+      // пост санын жаңарту
+      postCount.textContent = home.querySelectorAll(".card").length;
+      // форманы тазалау
+      document.getElementById("author").value = "";
+      document.getElementById("title").value = "";
+      document.getElementById("desc").value = "";
+      document.getElementById("body").value = "";
+      // үйге ауысу
+      sections.forEach(sec => sec.classList.remove("active"));
+      document.getElementById("home").classList.add("active");
+    });
+  </script>
+</body>
+</html>
